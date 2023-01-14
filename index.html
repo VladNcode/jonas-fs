@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Coiny&family=Sono:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<script type="module" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+		<script type="module" derer src="./config.js"></script>
+		<script type="module" derer src="./script.js"></script>
+		<link rel="stylesheet" href="style.css" />
+		<title>Today I Learned!</title>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<div class="header-logo">
+					<img src="logo.png" alt="Today I Learned Logo" />
+					<h1>Today I Learned</h1>
+				</div>
+
+				<button class="btn btn-large btn-open">Share a fact</button>
+			</header>
+
+			<form class="fact-form hidden">
+				<input type="text" placeholder="Share a fact with the world..." />
+				<span>200</span>
+				<input type="text" placeholder="Trustworthy source..." />
+				<select>
+					<option value="">Choose category:</option>
+					<option value="technology">Technology</option>
+					<option value="science">Science</option>
+					<option value="finance">Finance</option>
+				</select>
+				<button class="btn btn-large">Post</button>
+			</form>
+
+			<main class="main">
+				<aside>
+					<ul class="category-buttons"></ul>
+				</aside>
+
+				<section>
+					<ul class="fact-list"></ul>
+				</section>
+			</main>
+		</div>
+	</body>
+</html>
