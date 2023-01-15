@@ -1,3 +1,5 @@
+import { PostgrestError } from '@supabase/supabase-js';
+
 export interface FactProps {
 	category: string | null;
 	created_at: string | null;
@@ -27,4 +29,24 @@ export interface FactListProps {
 export interface NewFactFormProps {
 	setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
 	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface fetchFactsProps {
+	factCategory: string;
+	setError: React.Dispatch<React.SetStateAction<PostgrestError | null>>;
+	setFacts: React.Dispatch<
+		React.SetStateAction<
+			| {
+					category: string | null;
+					created_at: string | null;
+					dislike: number | null;
+					id: number;
+					like: number | null;
+					mindblowing: number | null;
+					source: string | null;
+					text: string | null;
+			  }[]
+			| null
+		>
+	>;
 }
