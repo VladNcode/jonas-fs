@@ -6,7 +6,6 @@ export const NewFactForm: React.FC = () => {
 	const [category, setCategory] = useState('');
 	const [factText, setFactText] = useState('');
 	const [source, setSource] = useState('');
-	const [count, setCount] = useState(MAX_ALLOWED_CHARACTERS);
 
 	const selectOptions = [
 		<option key="none" value="">
@@ -27,20 +26,22 @@ export const NewFactForm: React.FC = () => {
 			<input
 				type="text"
 				placeholder="Share a fact with the world..."
+				value={factText}
 				onChange={e => {
-					setCount(MAX_ALLOWED_CHARACTERS - e.target.value.length);
 					setFactText(e.target.value);
 				}}
 			/>
-			<span>{count}</span>
+			<span>{MAX_ALLOWED_CHARACTERS - factText.length}</span>
 			<input
 				onChange={e => {
 					setSource(e.target.value);
 				}}
+				value={source}
 				type="text"
 				placeholder="Trustworthy source..."
 			/>
 			<select
+				value={category}
 				onChange={e => {
 					setCategory(e.target.value);
 				}}
