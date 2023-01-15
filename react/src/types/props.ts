@@ -15,5 +15,16 @@ export interface HeaderProps {
 }
 
 export interface CategoryFilterProps {
-	setCategory: React.Dispatch<React.SetStateAction<string>>;
+	setFactCategory: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface FactListProps {
+	factCategory: string;
+	shouldUpdateList: boolean;
+	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface NewFactFormProps {
+	setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
 }

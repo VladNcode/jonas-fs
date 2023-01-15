@@ -1,11 +1,26 @@
 import { useState } from 'react';
+import * as yup from 'yup';
 
+import { supabase } from '../database/supabase';
 import { CATEGORIES, MAX_ALLOWED_CHARACTERS } from '../helpers/constraints';
+import { FactProps, NewFactFormProps } from '../types/props';
 
-export const NewFactForm: React.FC = () => {
+const schema = yup.object().shape({
+	text: yup.string().max(200).required(),
+	category: yup
+		.string()
+		.oneOf(CATEGORIES.map(cat => cat.name))
+		.required(),
+	source: yup.string().url().required(),
+});
+
+const errorCSS = { color: 'red', marginBottom: '20px', display: 'flex', justifyContent: 'center' };
+
+export const NewFactForm: React.FC<NewFactFormProps> = ({ setShowForm, setShouldUpdateList }) => {
 	const [category, setCategory] = useState('');
 	const [factText, setFactText] = useState('');
 	const [source, setSource] = useState('');
+	const [errorMessage, setErrorMessage] = useState('');
 
 	const selectOptions = [
 		<option key="none" value="">
@@ -21,42 +36,54 @@ export const NewFactForm: React.FC = () => {
 		);
 	});
 
+	const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFactText(e.target.value);
+	};
+
+	const handleSourceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSource(e.target.value);
+	};
+
+	const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setCategory(e.target.value);
+	};
+
+	const resetForm = () => {
+		setFactText('');
+		setSource('');
+		setCategory('');
+		setErrorMessage('');
+		setShowForm(false);
+	};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const fact: Pick<FactProps, 'category' | 'text' | 'source'> = { category, text: factText, source };
+
+		try {
+			await schema.validate(fact);
+			await supabase.from('facts').insert(fact);
+
+			resetForm();
+			setShouldUpdateList(true);
+		} catch (error) {
+			setErrorMessage(error instanceof Error ? error.message : 'Something went wrong!');
+		}
+	};
+
 	return (
-		<form className="fact-form">
-			<input
-				type="text"
-				placeholder="Share a fact with the world..."
-				value={factText}
-				onChange={e => {
-					setFactText(e.target.value);
-				}}
-			/>
-			<span>{MAX_ALLOWED_CHARACTERS - factText.length}</span>
-			<input
-				onChange={e => {
-					setSource(e.target.value);
-				}}
-				value={source}
-				type="text"
-				placeholder="Trustworthy source..."
-			/>
-			<select
-				value={category}
-				onChange={e => {
-					setCategory(e.target.value);
-				}}
-			>
-				{selectOptions}
-			</select>
-			<button
-				onClick={e => {
-					e.preventDefault();
-					console.log({ category, factText, source });
-				}}
-				className="btn btn-large"
-			>
-				Post
-			</button>
-		</form>
+		<>
+			{errorMessage && <div style={errorCSS}>{errorMessage}</div>}
+			<form className="fact-form" onSubmit={handleSubmit}>
+				<input type="text" placeholder="Share a fact with the world..." value={factText} onChange={handleTextChange} />
+				<span>{MAX_ALLOWED_CHARACTERS - factText.length}</span>
+				<input onChange={handleSourceChange} value={source} type="text" placeholder="Trustworthy source..." />
+				<select value={category} onChange={handleCategoryChange}>
+					{selectOptions}
+				</select>
+				<button className="btn btn-large">Post</button>
+			</form>
+		</>
 	);
 };

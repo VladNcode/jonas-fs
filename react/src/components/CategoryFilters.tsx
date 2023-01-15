@@ -1,14 +1,14 @@
 import { CATEGORIES } from '../helpers/constraints';
 import { CategoryFilterProps } from '../types/props';
 
-export const CategoryFilter: React.FC<CategoryFilterProps> = ({ setCategory }) => {
+export const CategoryFilter: React.FC<CategoryFilterProps> = ({ setFactCategory }) => {
 	const selectAllCategories = () => {
-		setCategory('all');
+		setFactCategory('all');
 	};
 
 	const buttons = CATEGORIES.map(({ name, color }) => {
 		const onClick = () => {
-			setCategory(name);
+			setFactCategory(name);
 		};
 
 		const style = {

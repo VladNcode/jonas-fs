@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { supabase } from '../database/supabase';
 import { CATEGORIES } from '../helpers/constraints';
+import { FactListProps } from '../types/props';
 import { Fact } from './Fact';
 
 type FactsResponse = Awaited<ReturnType<typeof getFacts>>;
@@ -24,9 +25,7 @@ const buildFactList = (facts: FactsResponseSuccess) => {
 	});
 };
 
-export const FactList: React.FC<{
-	category: string;
-}> = ({ category }) => {
+export const FactList: React.FC<FactListProps> = ({ factCategory, shouldUpdateList, setShouldUpdateList }) => {
 	const [facts, setFacts] = useState<FactsResponseSuccess>(null);
 	const [error, setError] = useState<FactsResponseError>(null);
 
@@ -40,12 +39,32 @@ export const FactList: React.FC<{
 			}
 
 			if (response.data) {
-				setFacts(category === 'all' ? response.data : response.data.filter(fact => fact.category === category));
+				setFacts(factCategory === 'all' ? response.data : response.data.filter(fact => fact.category === factCategory));
 			}
 		};
 
 		fetchFacts();
-	}, [category]);
+	}, [factCategory]);
+
+	useEffect(() => {
+		const fetchFacts = async () => {
+			const response = await getFacts();
+
+			if (response.error) {
+				setError(response.error);
+				return;
+			}
+
+			if (response.data) {
+				setFacts(factCategory === 'all' ? response.data : response.data.filter(fact => fact.category === factCategory));
+			}
+		};
+
+		if (shouldUpdateList) {
+			setShouldUpdateList(false);
+			fetchFacts();
+		}
+	}, [shouldUpdateList]);
 
 	if (!facts) return <div>Loading...</div>;
 	if (error) return <div>{error.message}</div>;
