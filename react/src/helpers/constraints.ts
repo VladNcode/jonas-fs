@@ -8,3 +8,5 @@ export const CATEGORIES = [
 	{ name: 'history', color: '#f97316' },
 	{ name: 'news', color: '#8b5cf6' },
 ];
+
+export const MAX_ALLOWED_CHARACTERS = 200;

@@ -1,50 +1,40 @@
-import { useState } from 'react';
 import { CATEGORIES } from '../helpers/constraints';
+import { CategoryFilterProps } from '../types/props';
 
-export const CategoryFilter: React.FC<{
-	category: string;
-	setCategory: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ category, setCategory }) => {
-	const buttons = [];
+export const CategoryFilter: React.FC<CategoryFilterProps> = ({ setCategory }) => {
+	const selectAllCategories = () => {
+		setCategory('all');
+	};
 
-	const allCategoriesButton = (
-		<li key="all" className="category">
-			<button
-				className="btn btn-all-categories"
-				onClick={() => {
-					setCategory('all');
-				}}
-			>
-				All
-			</button>
-		</li>
-	);
+	const buttons = CATEGORIES.map(({ name, color }) => {
+		const onClick = () => {
+			setCategory(name);
+		};
 
-	buttons.push(allCategoriesButton);
+		const style = {
+			backgroundColor: color,
+		};
 
-	const categoryButtons = CATEGORIES.map(({ name, color }) => {
 		return (
 			<li key={name} className="category">
-				<button
-					onClick={() => {
-						setCategory(name);
-					}}
-					style={{
-						backgroundColor: color,
-					}}
-					className="btn btn-category"
-				>
+				<button onClick={onClick} style={style} className="btn btn-category">
 					{name.toUpperCase()}
 				</button>
 			</li>
 		);
 	});
 
-	buttons.push(...categoryButtons);
-
 	return (
 		<aside>
-			<ul className="category-buttons">{buttons}</ul>
+			<ul className="category-buttons">
+				<li className="category">
+					<button className="btn btn-all-categories" onClick={selectAllCategories}>
+						All
+					</button>
+				</li>
+
+				{buttons}
+			</ul>
 		</aside>
 	);
 };

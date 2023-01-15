@@ -1,4 +1,12 @@
-export const Header: React.FC = () => {
+import { HeaderProps } from '../types/props';
+
+export const Header: React.FC<HeaderProps> = ({ showForm, setShowForm }) => {
+	const toggleForm = () => {
+		setShowForm(f => !f);
+	};
+
+	const buttonText = showForm ? 'Close' : 'Share a fact';
+
 	return (
 		<header className="header">
 			<div className="header-logo">
@@ -6,7 +14,9 @@ export const Header: React.FC = () => {
 				<h1>Today I Learned</h1>
 			</div>
 
-			<button className="btn btn-large btn-open">Share a fact</button>
+			<button onClick={toggleForm} className="btn btn-large btn-open">
+				{buttonText}
+			</button>
 		</header>
 	);
 };

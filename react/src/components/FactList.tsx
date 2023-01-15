@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { supabase } from '../database/supabase';
 import { CATEGORIES } from '../helpers/constraints';
+import { Fact } from './Fact';
 
 type FactsResponse = Awaited<ReturnType<typeof getFacts>>;
 export type FactsResponseSuccess = FactsResponse['data'];
@@ -17,31 +18,9 @@ const buildFactList = (facts: FactsResponseSuccess) => {
 	return facts.map(fact => {
 		const color = CATEGORIES.find(cat => cat.name === fact.category)?.color;
 
-		return (
-			<li key={fact.id} className="fact">
-				<p>
-					{fact.text}
-					<a className="fact-link" href={fact.source || '#'} target="_blank">
-						(Source)
-					</a>
-				</p>
+		const props = { ...fact, color };
 
-				<span
-					style={{
-						backgroundColor: color || 'black',
-					}}
-					className="tag"
-				>
-					{fact.category}
-				</span>
-
-				<div className="vote-buttons">
-					<button>👍 {fact.like}</button>
-					<button>🤯 {fact.mindblowing}</button>
-					<button>⛔️ {fact.dislike}</button>
-				</div>
-			</li>
-		);
+		return <Fact key={fact.id} {...props} />;
 	});
 };
 
@@ -55,12 +34,13 @@ export const FactList: React.FC<{
 		const fetchFacts = async () => {
 			const response = await getFacts();
 
-			if (response.data) {
-				setFacts(category === 'all' ? response.data : response.data.filter(fact => fact.category === category));
-			}
-
 			if (response.error) {
 				setError(response.error);
+				return;
+			}
+
+			if (response.data) {
+				setFacts(category === 'all' ? response.data : response.data.filter(fact => fact.category === category));
 			}
 		};
 
