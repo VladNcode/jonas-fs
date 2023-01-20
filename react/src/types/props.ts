@@ -50,3 +50,8 @@ export interface fetchFactsProps {
 		>
 	>;
 }
+
+export type FactElementProps = FactProps & {
+	color: string | undefined;
+	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
+};
