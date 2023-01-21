@@ -40,10 +40,16 @@ export interface Database {
 			[_ in never]: never;
 		};
 		Functions: {
-			[_ in never]: never;
+			incrementlikes(Args: { Args: { row_id: number } }): void;
+			incrementmindblowing(Args: { Args: { row_id: number } }): void;
+			incrementdislikes(Args: { Args: { row_id: number } }): void;
+			// [_ in never]: never;
 		};
 		Enums: {
 			[_ in never]: never;
 		};
 	};
 }
+
+export type FunctionNames = keyof Database['public']['Functions'];
+export type FunctionArgs = Parameters<Database['public']['Functions'][FunctionNames]>[0];

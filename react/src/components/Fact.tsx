@@ -1,53 +1,38 @@
-import { supabase } from '../database/supabase';
-import { FactElementProps } from '../types/props';
+import { useCallback, useState } from 'react';
 
-export const Fact: React.FC<FactElementProps> = ({
-	text,
-	source,
-	color,
-	category,
-	like,
-	mindblowing,
-	dislike,
-	id,
-	setShouldUpdateList,
-}) => {
+import { FunctionArgs, FunctionNames } from '../database/database.types';
+import { supabase } from '../database/supabase';
+import { FactElementProps, UpdateVotesArgs } from '../types/props';
+
+const updateVotes = async ({ functionName, functionArgs, updateCount }: UpdateVotesArgs) => {
+	const { error } = await supabase.rpc<FunctionNames, FunctionArgs>(functionName, functionArgs);
+
+	console.log(error);
+
+	if (!error) {
+		updateCount(c => (c || 0) + 1);
+	}
+};
+
+export const Fact: React.FC<FactElementProps> = ({ text, source, color, category, like, mindblowing, dislike, id }) => {
+	const [likes, setLikes] = useState(like);
+	const [mindblowings, setMindblowings] = useState(mindblowing);
+	const [dislikes, setDislikes] = useState(dislike);
+
 	const style = {
 		backgroundColor: color || 'black',
 	};
 
-	const updateLikes = async () => {
-		const { data, error } = await supabase
-			.from('facts')
-			.update({ like: like ? like + 1 : 1 })
-			.eq('id', id);
-
-		if (!error) {
-			setShouldUpdateList(true);
-		}
-	};
-
-	const updateMindblowing = async () => {
-		const { data, error } = await supabase
-			.from('facts')
-			.update({ mindblowing: mindblowing ? mindblowing + 1 : 1 })
-			.eq('id', id);
-
-		if (!error) {
-			setShouldUpdateList(true);
-		}
-	};
-
-	const updateDislikes = async () => {
-		const { data, error } = await supabase
-			.from('facts')
-			.update({ dislike: dislike ? dislike + 1 : 1 })
-			.eq('id', id);
-
-		if (!error) {
-			setShouldUpdateList(true);
-		}
-	};
+	const getFunctionArgs = useCallback(
+		(name: FunctionNames, updateCount: React.Dispatch<React.SetStateAction<number | null>>) => {
+			return {
+				functionArgs: { row_id: id },
+				functionName: name,
+				updateCount,
+			};
+		},
+		[id],
+	);
 
 	return (
 		<li className="fact">
@@ -63,9 +48,27 @@ export const Fact: React.FC<FactElementProps> = ({
 			</span>
 
 			<div className="vote-buttons">
-				<button onClick={updateLikes}>👍 {like}</button>
-				<button onClick={updateMindblowing}>🤯 {mindblowing}</button>
-				<button onClick={updateDislikes}>⛔️ {dislike}</button>
+				<button
+					onClick={() => {
+						updateVotes(getFunctionArgs('incrementlikes', setLikes));
+					}}
+				>
+					👍 {likes}
+				</button>
+				<button
+					onClick={() => {
+						updateVotes(getFunctionArgs('incrementmindblowing', setMindblowings));
+					}}
+				>
+					🤯 {mindblowings}
+				</button>
+				<button
+					onClick={() => {
+						updateVotes(getFunctionArgs('incrementdislikes', setDislikes));
+					}}
+				>
+					⛔️ {dislikes}
+				</button>
 			</div>
 		</li>
 	);

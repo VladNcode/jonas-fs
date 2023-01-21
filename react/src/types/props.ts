@@ -1,4 +1,5 @@
 import { PostgrestError } from '@supabase/supabase-js';
+import { FunctionArgs, FunctionNames } from '../database/database.types';
 
 export interface FactProps {
 	category: string | null;
@@ -56,3 +57,9 @@ export type FactElementProps = FactProps & {
 	color: string | undefined;
 	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export interface UpdateVotesArgs {
+	functionName: FunctionNames;
+	functionArgs: FunctionArgs['Args'];
+	updateCount: React.Dispatch<React.SetStateAction<number | null>>;
+}

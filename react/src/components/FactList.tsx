@@ -15,19 +15,12 @@ async function getFacts(category: string) {
 	return await (category !== 'all' ? query.eq('category', category) : query);
 }
 
-const buildFactList = ({
-	facts,
-	setShouldUpdateList,
-}: {
-	facts: FactsResponseSuccess;
-	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const buildFactList = (facts: FactsResponseSuccess) => {
 	if (!facts) return null;
 
 	return facts.map(fact => {
 		const color = CATEGORIES.find(cat => cat.name === fact.category)?.color;
-
-		const props = { ...fact, color, setShouldUpdateList };
+		const props = { ...fact, color };
 
 		return <Fact key={fact.id} {...props} />;
 	});
@@ -70,7 +63,7 @@ export const FactList: React.FC<FactListProps> = ({ factCategory, shouldUpdateLi
 	if (isLoading) return <div className="uploadingFact loading">Loading...</div>;
 	if (error) return <div>{error.message}</div>;
 
-	const factsList = buildFactList({ facts, setShouldUpdateList });
+	const factsList = buildFactList(facts);
 
 	return <ul className="fact-list">{factsList}</ul>;
 };
