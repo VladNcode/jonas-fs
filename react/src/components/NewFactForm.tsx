@@ -21,6 +21,7 @@ export const NewFactForm: React.FC<NewFactFormProps> = ({ setShowForm, setShould
 	const [factText, setFactText] = useState('');
 	const [source, setSource] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [isUploading, setIsUploading] = useState(false);
 
 	const selectOptions = [
 		<option key="none" value="">
@@ -58,6 +59,7 @@ export const NewFactForm: React.FC<NewFactFormProps> = ({ setShowForm, setShould
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setIsUploading(true);
 
 		const fact: Pick<FactProps, 'category' | 'text' | 'source'> = { category, text: factText, source };
 
@@ -69,20 +71,37 @@ export const NewFactForm: React.FC<NewFactFormProps> = ({ setShowForm, setShould
 			setShouldUpdateList(true);
 		} catch (error) {
 			setErrorMessage(error instanceof Error ? error.message : 'Something went wrong!');
+		} finally {
+			setIsUploading(false);
 		}
 	};
 
 	return (
 		<>
+			{isUploading && <div className="uploadingFact">Uploading fact...</div>}
 			{errorMessage && <div style={errorCSS}>{errorMessage}</div>}
 			<form className="fact-form" onSubmit={handleSubmit}>
-				<input type="text" placeholder="Share a fact with the world..." value={factText} onChange={handleTextChange} />
+				<input
+					disabled={isUploading}
+					type="text"
+					placeholder="Share a fact with the world..."
+					value={factText}
+					onChange={handleTextChange}
+				/>
 				<span>{MAX_ALLOWED_CHARACTERS - factText.length}</span>
-				<input onChange={handleSourceChange} value={source} type="text" placeholder="Trustworthy source..." />
-				<select value={category} onChange={handleCategoryChange}>
+				<input
+					disabled={isUploading}
+					onChange={handleSourceChange}
+					value={source}
+					type="text"
+					placeholder="Trustworthy source..."
+				/>
+				<select disabled={isUploading} value={category} onChange={handleCategoryChange}>
 					{selectOptions}
 				</select>
-				<button className="btn btn-large">Post</button>
+				<button disabled={isUploading} className="btn btn-large">
+					Post
+				</button>
 			</form>
 		</>
 	);

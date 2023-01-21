@@ -27,6 +27,18 @@ ul {
 	list-style: none;
 }
 
+.uploadingFact {
+	color: #d8b4fe;
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+	margin: 50px 0;
+}
+
+.loading {
+	color: #67e8f9;
+}
+
 .hidden {
 	display: none !important;
 }

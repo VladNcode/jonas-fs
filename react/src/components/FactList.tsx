@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { supabase } from '../database/supabase';
 import { CATEGORIES } from '../helpers/constraints';
-import { FactListProps, fetchFactsProps } from '../types/props';
+import { FactListProps, FetchFactsProps } from '../types/props';
 import { Fact } from './Fact';
 
 type FactsResponse = Awaited<ReturnType<typeof getFacts>>;
@@ -33,22 +33,28 @@ const buildFactList = ({
 	});
 };
 
-const fetchFacts = async ({ setError, setFacts, factCategory }: fetchFactsProps) => {
+const fetchFacts = async ({ setError, setFacts, factCategory, setIsLoading }: FetchFactsProps) => {
+	setIsLoading(true);
+
 	const response = await getFacts(factCategory);
 
 	if (response.error) {
 		setError(response.error);
+		setIsLoading(false);
+
 		return;
 	}
 
 	if (response.data) setFacts(response.data);
+	setIsLoading(false);
 };
 
 export const FactList: React.FC<FactListProps> = ({ factCategory, shouldUpdateList, setShouldUpdateList }) => {
 	const [facts, setFacts] = useState<FactsResponseSuccess>(null);
 	const [error, setError] = useState<FactsResponseError>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const fetchFactsProps = { factCategory, setError, setFacts };
+	const fetchFactsProps = { factCategory, setError, setFacts, setIsLoading };
 
 	useEffect(() => {
 		fetchFacts(fetchFactsProps);
@@ -61,8 +67,8 @@ export const FactList: React.FC<FactListProps> = ({ factCategory, shouldUpdateLi
 		}
 	}, [shouldUpdateList]);
 
+	if (isLoading) return <div className="uploadingFact loading">Loading...</div>;
 	if (error) return <div>{error.message}</div>;
-	if (!facts) return <div>Loading...</div>;
 
 	const factsList = buildFactList({ facts, setShouldUpdateList });
 

@@ -31,9 +31,10 @@ export interface NewFactFormProps {
 	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface fetchFactsProps {
+export interface FetchFactsProps {
 	factCategory: string;
 	setError: React.Dispatch<React.SetStateAction<PostgrestError | null>>;
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 	setFacts: React.Dispatch<
 		React.SetStateAction<
 			| {
