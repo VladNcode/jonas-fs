@@ -42,7 +42,12 @@ const fetchFacts = async ({ setError, setFacts, factCategory, setIsLoading }: Fe
 	setIsLoading(false);
 };
 
-export const FactList: React.FC<FactListProps> = ({ factCategory, shouldUpdateList, setShouldUpdateList }) => {
+export const FactList: React.FC<FactListProps> = ({
+	factCategory,
+	shouldUpdateList,
+	setShouldUpdateList,
+	factListRef,
+}) => {
 	const [facts, setFacts] = useState<FactsResponseSuccess>(null);
 	const [error, setError] = useState<FactsResponseError>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -65,5 +70,18 @@ export const FactList: React.FC<FactListProps> = ({ factCategory, shouldUpdateLi
 
 	const factsList = buildFactList(facts);
 
-	return <ul className="fact-list">{factsList}</ul>;
+	const factsCountMessage = `There are ${
+		facts?.length ? facts?.length : 'no'
+	} facts in the database for this category! Add your own!`;
+
+	return (
+		<>
+			<ul ref={factListRef} className="fact-list">
+				{factsList}
+				<li>
+					<p>{factsCountMessage}</p>
+				</li>
+			</ul>
+		</>
+	);
 };

@@ -2,15 +2,12 @@ import { useState } from 'react';
 import * as yup from 'yup';
 
 import { supabase } from '../database/supabase';
-import { CATEGORIES, MAX_ALLOWED_CHARACTERS } from '../helpers/constraints';
+import { CATEGORIES, categoriesNames, MAX_ALLOWED_CHARACTERS } from '../helpers/constraints';
 import { FactProps, NewFactFormProps } from '../types/props';
 
 const schema = yup.object().shape({
 	text: yup.string().max(200).required(),
-	category: yup
-		.string()
-		.oneOf(CATEGORIES.map(cat => cat.name))
-		.required(),
+	category: yup.string().oneOf(categoriesNames).required(),
 	source: yup.string().url().required(),
 });
 

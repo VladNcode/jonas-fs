@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { CategoryFilter } from './components/CategoryFilters';
 import { FactList } from './components/FactList';
@@ -11,13 +11,16 @@ function App() {
 	const [showForm, setShowForm] = useState(false);
 	const [shouldUpdateList, setShouldUpdateList] = useState(false);
 
+	const factListRef = useRef<HTMLUListElement>(null);
+
 	return (
 		<>
 			<Header showForm={showForm} setShowForm={setShowForm} />
 			{showForm && <NewFactForm setShowForm={setShowForm} setShouldUpdateList={setShouldUpdateList} />}
 			<main className="main">
-				<CategoryFilter setFactCategory={setFactCategory} />
+				<CategoryFilter factListRef={factListRef} setFactCategory={setFactCategory} />
 				<FactList
+					factListRef={factListRef}
 					factCategory={factCategory}
 					shouldUpdateList={shouldUpdateList}
 					setShouldUpdateList={setShouldUpdateList}

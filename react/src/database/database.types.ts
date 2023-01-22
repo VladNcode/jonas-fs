@@ -5,14 +5,14 @@ export interface Database {
 		Tables: {
 			facts: {
 				Row: {
-					category: string | null;
-					created_at: string | null;
-					dislike: number | null;
+					category: string;
+					created_at: string;
+					dislike: number;
 					id: number;
-					like: number | null;
-					mindblowing: number | null;
-					source: string | null;
-					text: string | null;
+					like: number;
+					mindblowing: number;
+					source: string;
+					text: string;
 				};
 				Insert: {
 					category?: string | null;

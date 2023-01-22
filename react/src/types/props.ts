@@ -2,14 +2,14 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { FunctionArgs, FunctionNames } from '../database/database.types';
 
 export interface FactProps {
-	category: string | null;
-	created_at: string | null;
-	dislike: number | null;
+	category: string;
+	created_at: string;
+	dislike: number;
 	id: number;
-	like: number | null;
-	mindblowing: number | null;
-	source: string | null;
-	text: string | null;
+	like: number;
+	mindblowing: number;
+	source: string;
+	text: string;
 }
 
 export interface HeaderProps {
@@ -18,10 +18,12 @@ export interface HeaderProps {
 }
 
 export interface CategoryFilterProps {
+	factListRef: React.RefObject<HTMLUListElement>;
 	setFactCategory: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface FactListProps {
+	factListRef: React.RefObject<HTMLUListElement>;
 	factCategory: string;
 	shouldUpdateList: boolean;
 	setShouldUpdateList: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,14 +41,14 @@ export interface FetchFactsProps {
 	setFacts: React.Dispatch<
 		React.SetStateAction<
 			| {
-					category: string | null;
-					created_at: string | null;
-					dislike: number | null;
+					category: string;
+					created_at: string;
+					dislike: number;
 					id: number;
-					like: number | null;
-					mindblowing: number | null;
-					source: string | null;
-					text: string | null;
+					like: number;
+					mindblowing: number;
+					source: string;
+					text: string;
 			  }[]
 			| null
 		>
@@ -61,5 +63,6 @@ export type FactElementProps = FactProps & {
 export interface UpdateVotesArgs {
 	functionName: FunctionNames;
 	functionArgs: FunctionArgs['Args'];
-	updateCount: React.Dispatch<React.SetStateAction<number | null>>;
+	updateCount: React.Dispatch<React.SetStateAction<number>>;
+	setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

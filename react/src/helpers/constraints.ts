@@ -9,4 +9,6 @@ export const CATEGORIES = [
 	{ name: 'news', color: '#8b5cf6' },
 ];
 
+export const categoriesNames = CATEGORIES.map(cat => cat.name);
+
 export const MAX_ALLOWED_CHARACTERS = 200;
